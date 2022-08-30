@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+        
+    function App() {
+        const [minutes, setMinutes] = React.useState(0);
+        function reset () {
+            setMinutes(0);
+        }
+        function onChange (event) {
+            // setCounter(counter + 1);
+            setMinutes(event.target.value)
+        }
+        console.log(minutes)
+        return (
+        
+        <div>
+        <h1>Super Converter</h1>
+        <div>
+            <label htmlfor="minutes">Minutes</label>
+            <input
+            value={minutes} //input의 value를 state의 값을 넣어줌 으로써 수정 가능
+            placeholder="Minutes"
+            type="number"
+            // onChange함수를 둠으로써 input이 바뀔때마다 값이 변화함
+            onChange={onChange} />     
+            <h4>You want to convert {minutes}</h4>
+        </div>
+        <div>
+            <label htmlfor="hours">Hours</label>
+            <input value={Math.round(minutes/60)} id="hours" placeholder="Hours" type="number" disabled/>    
+        </div>
+
+        <button onClick={reset}>Reset</button>
+
+        </div>  
+        )
+        }
+
+    ReactDOM.render(<App />, root)
+</script>
+</html>

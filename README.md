@@ -284,9 +284,213 @@ react(어려운변환) 에 대한 이해도
     // 또 현재의 값을 인자로 지닐 수 있기 때문에 변화에 덜 민감하다
     ```
 
+
+
+
+### React if문
+
+- 삼항연산자를 이용하여 표현을 해줌
+
+  - ```js
+    			//flipped가 true라면 amount, false라면 Math.round(amount/60)을 출력
+    <input value={flipped ? amount : Math.round(amount/60)} id="hours" placeholder="Hours" type="number" onChange={onChange} disabled={!flipped}/>
+
+    ```
+
+  - 위 예시는 flipped라는 함수가 변화하는 것에 따라 value를 바꾸어 주는 식이다
+
+  - 이를 버튼에서도 적용가능!
+
+  - ```
+                             //flipped 되었다면 왼쪽 안되었다면 오른쪽
+    <button onClick={onFlip}>{flipped ? "Turn back" : "Invert"}</button>
+    ```
+
   - ​
 
 
 
+### 분할 정복
 
+- 지금까지 만든 코드(시간,분 변환기)를  같은 html에 있는 컴포넌트에 추가한다.
+
+  - ```js
+    // 지금까지 만든 시간 변환기
+    function MinutesToHours() {
+            const [amount, setAmount] = React.useState(0);
+            const [flipped, setFlipped] = React.useState(false);
+            
+            
+            function onChange (event) {
+                // setCounter(counter + 1);
+                setAmount(event.target.value)
+            }
+            const reset = () => setAmount(0);
+            const onFlip = () => {
+                reset();
+                setFlipped((current) => !current)
+            };
+            return (
+            
+            <div>
+
+            <div>
+                <label htmlfor="minutes">Minutes</label>
+                <input
+                value={flipped ? amount*60 : amount} //input의 value를 state의 값을 넣어줌 으로써 수정 가능
+                placeholder="Minutes"
+                type="number"
+                // onChange함수를 둠으로써 input이 바뀔때마다 값이 변화함
+                onChange={onChange}  disabled={flipped}/>     
+                <h4>You want to convert {amount}</h4>
+            </div>
+            <div>
+                <label htmlfor="hours">Hours</label>
+                
+                <input value={flipped ? amount : Math.round(amount/60)} id="hours" placeholder="Hours" type="number" onChange={onChange} disabled={!flipped}/>    
+            </div>
+
+            <button onClick={reset}>Reset</button>
+            <button onClick={onFlip}>{flipped ? "Turn back" : "Invert"}</button>
+
+            </div>  
+            )
+            }
+    ```
+
+  - ```js
+    // 이를 하나의 컴포넌트 안에 html요소처럼 작성
+        function App() {
+            return (
+            <div>
+                <h1>Super Converter</h1>
+                // 이부분
+                <MinutesToHours />
+            
+            </div>  
+            )
+        }
+    이걸 분할 정복 이라고 한다.
+    ```
+
+  - 물론 여러개의 components를 분할정복도 가능
+
+
+
+### select
+
+- 새로운 개념은 아니고, 버튼 클릭시 컴포넌트를 골라주 는 코딩을 짜 볼 것임.
+
+- 우선 select시 value를 맞게 고르고 있는지 확인 작업
+
+  - ```html
+    우선 App에 return으로 html코드를 만들어줌	
+    <div>
+                <h1>Super Converter</h1>
+                <select onChange={onSelect}>
+                    <option value="0">Minutes & Hours</option>
+                    <option value="1">Km & Miles</option>
+                    </select>
+            </div>  
+    ```
+
+  - ```js
+    // 이후 onSelect 함수가 실행되면 event.target.value가 적절하게 나오는지 확인
+    const [index, setIndex] = React.useState(0)
+            const onSelect = (event) => {
+                console.log(event.target.value)
+    ```
+
+- 다음은 select된 value들을 state에 넣어줌
+
+  - ```js
+    const onSelect = (event) => {
+                console.log(event.target.value)
+                // 위에 설정된 state를 변경하는 함수에 event.target.value를 인자로 적용시킴
+                setIndex(event.target.value)
+            }
+    ```
+
+- 이후 html로 변환시켜주기 위해 html코드에 js코드를 작성함
+
+  - ```html
+     <div>
+                <h1>Super Converter</h1>
+                <select onChange={onSelect}>
+                    <option value="0">Minutes & Hours</option>
+                    <option value="1">Km & Miles</option>
+                    </select>
+                    // 중괄호를 사용하면 js코드를 html코드에서 작성 가능!
+                    // 이부분
+                    // index가 0이면 MinutesToHours를 보여주고 아니면 null
+                    {index ==="0" ? <MinutesToHours/>: null}
+                    
+            </div>  
+    ```
+
+  - 추가적으로 많은 index를 만들 수 있고, index값으로 그에 대한 html렌더링을 진행 할 수있다!
+
+### Props
+
+- Props는 부모 컴포넌트로부터 자식 컴포넌트에 데이터를 보낼 수 있게 해주는 방법
+
+- 예시로 코드를 작성해보자
+
+  - ```js
+    function Btn(props){
+            console.log(props)
+            return (
+            // Save Changes라는 이름의 버튼을 만듬
+                <button>Save Changes</button>
+            )
+        }     
+        function App() {
+            return (
+            <div>
+            // 버튼 두개를 컴포넌트에 보여줄건데 이 컴포넌트의 syndex(문구?는 내 마음대로 지정가능 아래 예시처럼 text나 x 이렇게 아무렇게
+      		//이녀석들은 자동적으로 Btn이란 함수의 props라는 인자로 들어가게 되는데,
+       		// 동작은 마치 Btn({text:"Save Changes", x: false})와 같이 동작함
+       		// 이를 통해 props를 진행 할 예정
+                <Btn text="Save Changes" x={false}/>
+                <Btn text="Continue" y={7}/>
+            </div>  
+            )
+        }
+    ```
+
+  - 이는 위 코드중 button의 글씨를 props를 이용해서 바꿀 예정인데 유용하게 사용됨
+
+  - ```js
+    function Btn(props){
+
+            return (
+             	// 이부분을 보면 알 수 있듯 props.text라는 값을 이름으로 보여 줄 수 있음
+                <button>{props.text}</button>
+            )
+        }
+    // 이는 아래와 같이 바꿀수 도 있음
+    function Btn({ text }){
+
+            return (
+                <button>{text}</button>
+            )
+        }     
+    ```
+
+  - 이런 상속적인 부분은 style로도 사용 가능
+
+  - ```js
+    return (
+                <button style={{
+                    backgroundColor: "tomato",
+                    color: "white",
+                    fontSize: big ? 16 : 13
+                }}>
+                    {text}
+                </button>
+
+            )
+    ```
+
+- ​
 

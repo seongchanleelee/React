@@ -1,0 +1,39 @@
+<!-- 사용자가 원하는 단위변환기를 선택할 수 있게 만든 단위변환기 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    // 2. 함수에 인자로 넣어주어야됨
+    function Btn({text, changeValue}) {
+        return (
+            // 3. 실제 실행되는 곳은 여기임
+            <div>
+                <button onClick={changeValue}>
+                    {text}
+                </button>
+            </div>
+        )
+    }
+    function App() {
+        const [value, setValue] = React.useState("Save Changes")
+        const changeValue = () => setValue("Revert Changes")
+        return (
+        <div>
+            // 1. 이곳에 들어가는 신덱스는 props요소 이므로, 
+            <Btn text={value} changeValue={changeValue}/>
+            <Btn text="Continue"/>
+        </div>  
+        )
+    }
+
+    ReactDOM.render(<App />, root)
+</script>
+</html>

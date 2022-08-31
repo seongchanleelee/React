@@ -292,8 +292,9 @@ react(어려운변환) 에 대한 이해도
 - 삼항연산자를 이용하여 표현을 해줌
 
   - ```js
-    			//flipped가 true라면 amount, false라면 Math.round(amount/60)을 출력
-    <input value={flipped ? amount : Math.round(amount/60)} id="hours" placeholder="Hours" type="number" onChange={onChange} disabled={!flipped}/>
+       //flipped가 true라면 amount, false라면 Math.round(amount/60)을 출력
+         <input value={flipped ? amount : Math.round(amount/60)} id="hours" placeholder="Hours" type="number" onChange={onChange} disabled={!flipped}/>
+       ```
 
     ```
 
@@ -426,9 +427,11 @@ react(어려운변환) 에 대한 이해도
                     {index ==="0" ? <MinutesToHours/>: null}
                     
             </div>  
+     ```
     ```
 
   - 추가적으로 많은 index를 만들 수 있고, index값으로 그에 대한 html렌더링을 진행 할 수있다!
+    ```
 
 ### Props
 
@@ -490,7 +493,128 @@ react(어려운변환) 에 대한 이해도
                 </button>
 
             )
+
     ```
 
-- ​
+  - 물론 함수나, 데이터에 대한 것도 부모에서 child함수에게 건내 줄 수 있고, 실행 시킬 수 도 있다.
+
+  - ```js
+    // 2. 함수에 인자로 넣어주어야됨
+    function Btn({text, changeValue}) {
+            console.log(text, "was rendered")
+            return (
+                // 3. 실제 실행되는 곳은 여기임
+                
+                    <button onClick={changeValue}>
+                        {text}
+                    </button>
+            )
+        }
+        function App() {
+            const [value, setValue] = React.useState("Save Changes")
+            const changeValue = () => setValue("Revert Changes")
+            return (
+            <div>
+                // 1. 이곳에 들어가는 신덱스는 props요소 이므로, 
+                <Btn text={value} changeValue={changeValue}/>
+                <Btn text="Continue"/>
+            </div>  
+            )
+        }
+    ```
+
+  - ​
+
+
+### memo
+
+- 어떠한 함수가 실행이 될 때, 전체적인 컴포넌트가 그려지는걸 볼 수 있음
+
+- 이를 방지 하기 위해 memo(memorize)라는 개념을 활용 할 예정
+
+  - ```js
+    // 기존에 함수인 Btn을 memo함수로 감쌈으로써, 부모요소가 변할 때 child전체가 변하지 않고 부모요소에서 요청한 child함수를 지닌 component만 변화하는걸 볼 수 있음
+    const MemorizedBtn = React.memo(Btn)
+        function App() {
+            const [value, setValue] = React.useState("Save Changes")
+            const changeValue = () => setValue("Revert Changes")
+            return (
+            <div>
+
+                <MemorizedBtn text={value} changeValue={changeValue}/>
+                <MemorizedBtn text="Continue"/>
+            </div>  
+            )
+        }
+    ```
+
+### PropType
+
+- Props를 진행할 때, 나나, 팀원이 잘못된 형태, 다른타입의 데이터를 props할 때, 유용하게 사용됨
+
+- props의 타입이 뭐고 어떤 모양이어야 하는지를 설명해줄 수 있음!
+
+  - ```js
+    // prop-types를 설치
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+    ```
+
+  - ```js
+    // 기존함수의 props되는 요소의 타입을 보기위해 제작
+        Btn.propTypes = {
+            text: propTypes.string,
+            fontSize: propTypes.number
+        };
+    // 위와 맞지 않은 형태의 데이터가 넘어온다면 콘솔창에 에러가 남
+    // 콘솔창에 보고싶은 오류를 확인하기 위해 있는것임
+    ```
+
+  - ```
+    Btn.propTypes = {
+    		//만약 무조건 필요한 데이터라면, .isRequired를 사용
+            text: propTypes.string.isRequired,
+            fontSize: propTypes.number.isRequired,
+        };
+    ```
+
+
+
+### 본격적 React
+
+- 지금까지 script문을 긁어서 사용했었다
+
+- 이제부턴 create-app을 하여 react를 사용할 예정
+
+- 이에 장점은 components들을 파일 단위로 나눌 수 있기 때문에 분류가 편해지고, css또한 component를 위한 css 파일을 만들 수 있음
+
+- 초기단계
+
+  - ```
+    node-v // node가 깔려있는지 확인
+    npx // npx가 잘 작동하는지 확인
+    npx create-react-app {폴더명} //폴더를 만듬
+
+    ```
+
+  - 만들어진 폴더는 많은 요소가 존재하는데 가볍게 얘기를 하자면
+
+    - App.js는 초기 화면에 비추어 지는 html요소를 넣는 곳
+    - index.js는 App.js와 같은 컴포넌트들을 html에 비추어 주기 위해 있는 요소
+    - js파일들을 만들어 components들을 서로 props 할 수 있음
+
+
+
+
+### Effect
+
+
+
+
+
+
+
+
+
+
+
 

@@ -117,7 +117,7 @@ react(어려운변환) 에 대한 이해도
   - ```js
     // 기존에 createElement와는 달리 html요소적으로 작성이 가능함
     // 함수를 사용할 땐 {} 안에 함수 내용을 작성
-
+  
     const Title = <h3 id="title" onMouseEnter={() => console.log("mouse Enter")}>
              Hello I'm a title
              </h3>
@@ -140,14 +140,14 @@ react(어려운변환) 에 대한 이해도
              </h3>
             );
         }
-
+  
     // 이는 arrow형태로 표현
     const Button = () => (<button style={{backgroundColor: "tomato",}} onClick={() => console.log("im clicked")} >
             Click me
             </button>)
-
+  
     // 그 뒤 container에 html요소로 넣어주면 됨
-
+  
         const Container = <div>
             <Title />
             <Button />
@@ -172,20 +172,20 @@ react(어려운변환) 에 대한 이해도
         function countUp() {
             counter = counter+1;
             render()
-
+    
         }
-
+    
         function render() {
             ReactDOM.render(<Container />, root)
         }
-
+    
         
         const Container = () => (
             <div>
             <h3>Total clicks: {counter}</h3>
             <button onClick={countUp}>Click me</button>
             </div>)
-
+    
         render()
     </script>
     ```
@@ -242,7 +242,7 @@ react(어려운변환) 에 대한 이해도
                 modifier(999)
             }
             console.log(counter)
-
+  
     		return (
             
             <div>
@@ -251,7 +251,7 @@ react(어려운변환) 에 대한 이해도
             </div>  
             )
     //onclick이란 함수가 적용되면, modifier() 함수의 인자로 counter가 변화하게 됨
-
+  
     //console.log 값을 보면 counter = 0 이였다가, button을 누르면 counter가 999가 되는걸 확인 할 수 있음
     ```
 
@@ -279,7 +279,7 @@ react(어려운변환) 에 대한 이해도
     setCounter(counter + 1);
     // 하나의 함수에 current라는 인자를 불러들이고(current는 counter가 하나의 인자로 들어간 것임), 이 인자를 +1 시켜줌 
     setCounter((current) => current +1)
-
+    
     // 위와 아래는 동일한 동작을 하는데, 아래와 같은 방법을 선호하는 이유는, 혹시 모를 다른 함수로 인한 값의 변환을 막아 안전하기 때문이다.
     // 또 현재의 값을 인자로 지닐 수 있기 때문에 변화에 덜 민감하다
     ```
@@ -307,7 +307,7 @@ react(어려운변환) 에 대한 이해도
     <button onClick={onFlip}>{flipped ? "Turn back" : "Invert"}</button>
     ```
 
-  - ​
+  - 
 
 
 
@@ -334,7 +334,7 @@ react(어려운변환) 에 대한 이해도
             return (
             
             <div>
-
+    
             <div>
                 <label htmlfor="minutes">Minutes</label>
                 <input
@@ -350,10 +350,10 @@ react(어려운변환) 에 대한 이해도
                 
                 <input value={flipped ? amount : Math.round(amount/60)} id="hours" placeholder="Hours" type="number" onChange={onChange} disabled={!flipped}/>    
             </div>
-
+    
             <button onClick={reset}>Reset</button>
             <button onClick={onFlip}>{flipped ? "Turn back" : "Invert"}</button>
-
+    
             </div>  
             )
             }
@@ -465,7 +465,7 @@ react(어려운변환) 에 대한 이해도
 
   - ```js
     function Btn(props){
-
+    
             return (
              	// 이부분을 보면 알 수 있듯 props.text라는 값을 이름으로 보여 줄 수 있음
                 <button>{props.text}</button>
@@ -473,7 +473,7 @@ react(어려운변환) 에 대한 이해도
         }
     // 이는 아래와 같이 바꿀수 도 있음
     function Btn({ text }){
-
+    
             return (
                 <button>{text}</button>
             )
@@ -491,9 +491,9 @@ react(어려운변환) 에 대한 이해도
                 }}>
                     {text}
                 </button>
-
+    
             )
-
+    
     ```
 
   - 물론 함수나, 데이터에 대한 것도 부모에서 child함수에게 건내 줄 수 있고, 실행 시킬 수 도 있다.
@@ -523,7 +523,7 @@ react(어려운변환) 에 대한 이해도
         }
     ```
 
-  - ​
+  - 
 
 
 ### memo
@@ -540,7 +540,7 @@ react(어려운변환) 에 대한 이해도
             const changeValue = () => setValue("Revert Changes")
             return (
             <div>
-
+    
                 <MemorizedBtn text={value} changeValue={changeValue}/>
                 <MemorizedBtn text="Continue"/>
             </div>  
@@ -593,7 +593,7 @@ react(어려운변환) 에 대한 이해도
     node-v // node가 깔려있는지 확인
     npx // npx가 잘 작동하는지 확인
     npx create-react-app {폴더명} //폴더를 만듬
-
+    
     ```
 
   - 만들어진 폴더는 많은 요소가 존재하는데 가볍게 얘기를 하자면
@@ -607,14 +607,35 @@ react(어려운변환) 에 대한 이해도
 
 ### Effect
 
+- 이벤트가 발생할 시, function이 돌면서 전체적인 부분에 대해 변화를 주게 된다.
 
+- 이런걸 막기위해, 이벤트 발생시 변경되는 컴포넌트만을 rerender시키고 싶을 때 사용
 
+  - ```js
+    function App() {
+      const [counter, setValue] = useState(0);
+      const onClick = () => setValue((prev) => prev + 1)
+      console.log("i run all the time");
+      // 이건 가볍게 변화하기 전 의 useEffect
+      // const iRunOnlyOnlyOnce = () => {
+      //   console.log("i run only once.")
+      // }
+      // useEffect( iRunOnlyOnlyOnce, [] )
+        
+      // 이건 가볍게 변화한 후의 useEffect
+      useEffect(() => {
+        console.log("call the api...")
+      }, [])
+    
+      return (
+        <div>
+          <h1 className={styles.title}>Welcome back!</h1>
+          <Button text={"Continue"} />
+          <div>{counter}</div>
+          <button onClick={onClick}>click me</button>
+        </div>
+      );
+    }
+    ```
 
-
-
-
-
-
-
-
-
+  - 

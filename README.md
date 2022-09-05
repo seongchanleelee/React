@@ -117,7 +117,7 @@ react(어려운변환) 에 대한 이해도
   - ```js
     // 기존에 createElement와는 달리 html요소적으로 작성이 가능함
     // 함수를 사용할 땐 {} 안에 함수 내용을 작성
-  
+    
     const Title = <h3 id="title" onMouseEnter={() => console.log("mouse Enter")}>
              Hello I'm a title
              </h3>
@@ -140,14 +140,14 @@ react(어려운변환) 에 대한 이해도
              </h3>
             );
         }
-  
+    
     // 이는 arrow형태로 표현
     const Button = () => (<button style={{backgroundColor: "tomato",}} onClick={() => console.log("im clicked")} >
             Click me
             </button>)
-  
+    
     // 그 뒤 container에 html요소로 넣어주면 됨
-  
+    
         const Container = <div>
             <Title />
             <Button />
@@ -242,7 +242,7 @@ react(어려운변환) 에 대한 이해도
                 modifier(999)
             }
             console.log(counter)
-  
+    
     		return (
             
             <div>
@@ -251,7 +251,7 @@ react(어려운변환) 에 대한 이해도
             </div>  
             )
     //onclick이란 함수가 적용되면, modifier() 함수의 인자로 counter가 변화하게 됨
-  
+    
     //console.log 값을 보면 counter = 0 이였다가, button을 누르면 counter가 999가 되는걸 확인 할 수 있음
     ```
 
@@ -636,6 +636,35 @@ react(어려운변환) 에 대한 이해도
         </div>
       );
     }
+    ```
+
+- array에 요소 넣기
+
+  - 기존 state가 array([])이고, array안에 작성한 값들을 계속 넣어주 고 싶을때
+
+  - ```
+    const [toDos, setTodos] = useState([]);
+    
+    // 핵심부분인데 바로 이전의 array를 가져오고 그 안에 값을 넣기위해선 ...array를 진행 해야 함
+    setTodos((currentArray) => [toDo, ...currentArray])
+    ```
+
+- array내에 있는 요소를 하나씩 꺼내기(map함수를 이용)
+
+  - ```js
+    // 우선 App함수 내에 html요소에 자바 스크립트 요소를 사용하기 위해선 {}가 필요
+    
+    // 이후 {} 내에 자바스크립트 내용을 넣으면 됨
+    
+    <ul>
+       {toDos.map((item, index) => (
+       	<li key={index}>{item}</li>
+        ))}
+    </ul>
+    
+    //map이란 array안에 특정한 element들을 바꾸고싶고, 다 바뀐 새로운 array를 쓰고 싶을때 씀
+    // map안엔 함수를 넣을 수 있는데 그 함수는 array의 모든 item에 대해 실행됨
+    // 이를 하나씩 사용하기 위해선 html요소에 key를 연동시켜 사용하면됨 -> 이는 index를 많이 씀
     ```
 
   - 

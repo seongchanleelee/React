@@ -667,4 +667,34 @@ react(어려운변환) 에 대한 이해도
     // 이를 하나씩 사용하기 위해선 html요소에 key를 연동시켜 사용하면됨 -> 이는 index를 많이 씀
     ```
 
-  - 
+#### async await
+
+- 비동기 함수인 js에 순서를 부여해줌
+
+- 파이썬으로 치면 코드의 순서대로 행동이 된다고 생각하면 됨
+
+  - ```
+    //먼저 async() 함수를 작성
+    const getMovies = async() => {
+    // async함수 안엔 await란 용어를 이용하여 함수의 순서를 만들어 낼 수 있음
+        const json = await( await fetch(`https://yts.mx/api/v2/list_movies.json?minimum_rating=8.5&sort_by=year`
+        )).json();
+    
+        setMovies(json.data.movies);
+        setLoading(false);
+      }
+    ```
+
+
+
+#### map
+
+- 어떠한 array에서 item들 모두에게 하나씩 특정한 함수를 적용시키기 위해 있음
+
+- ```js
+  //예시
+  movies.map(movie => ({적용시킬 함수 또는 html태그 뭐 아무거나 상관 x}))
+  ```
+
+- 
+
